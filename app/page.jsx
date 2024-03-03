@@ -5,7 +5,7 @@ import { auth } from "./firebase/config";
 import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { uploadToS3 } from "../pages/upload";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
     const [user] = useAuthState(auth);
@@ -13,7 +13,15 @@ export default function Home() {
 
     const router = useRouter();
 
-    const userSession = sessionStorage.getItem("user");
+    const [userSession, setUserSession] = useState(null);
+
+    useEffect(() => {
+      // Access sessionStorage here
+      const storedData = sessionStorage.getItem('user');
+      if (storedData) {
+        setUserSession(JSON.parse(storedData));
+      }
+    }, []);
 
     console.log(process.env.URL_AWS_S3, "aqs upload");
 
